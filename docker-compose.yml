@@ -1,0 +1,26 @@
+version: '2'
+services:
+  application:
+    build: ./docker/development
+    ports:
+        - "9000:9000"
+    volumes:
+        - ./application:/usr/share/nginx/html
+
+  nginx:
+    image: nginx:1.11.4
+    ports:
+        - "80:80"
+    links:
+        - application
+        - mysql
+    volumes:
+        - ./docker/development/nginx/default:/etc/nginx/sites-available/default
+        - ./docker/development/nginx/default:/etc/nginx/conf.d
+  
+  mysql:
+    image: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: admin
+    ports:
+      - "3306:3306"
